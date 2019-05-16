@@ -2,6 +2,7 @@
   <div id="app">
     <createuser v-if="!username" @newplayermasuk="newplayer"></createuser>
     <createroom v-if="username"></createroom>
+    <router-view />
   </div>
 </template>
 
