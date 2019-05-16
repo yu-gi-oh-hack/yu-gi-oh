@@ -1,10 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <createuser v-if="!username" @newplayermasuk="newplayer"></createuser>
+    <createroom v-if="username"></createroom>
   </div>
 </template>
 
@@ -27,3 +24,30 @@
   }
 }
 </style>
+
+<script>
+import db from '@/api/firebase'
+import createroom from '@/components/createRoom'
+import createuser from '@/components/createUser'
+
+export default {
+  components: {
+    createroom,
+    createuser
+  },
+  data(){
+    return {
+      username: null
+    }
+  },
+  methods: {
+    newplayer(v){
+      this.username = v 
+    }
+  },
+  created(){
+    this.username = localStorage.username
+
+  }
+}
+</script>
