@@ -74,6 +74,7 @@
                     })
             },
             joinRoom(room) {
+                console.log(room)
                 // this.list_rooms = []
                 db.collection("rooms").doc(room.id)
                     .update({
