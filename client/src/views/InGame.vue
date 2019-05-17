@@ -850,7 +850,6 @@ export default {
     font-weight: 500;
     right: -69px;
     top: -90px;
-    
     display: none;
 }
 .card__tooltip .name {
