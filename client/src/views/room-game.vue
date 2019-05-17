@@ -26,7 +26,7 @@
         class="btn btn-primary mt-5"
         data-toggle="modal"
         data-whatever="@getbootstrap"
-      >Back</button>
+      >Exit</button>
       </router-link>
       </div>
       <div
@@ -40,6 +40,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-body">
+              <p>Create Room :</p>
               <form>
                 <div class="form-group">
                   <label for="recipient-name" class="col-form-label"></label>
@@ -83,7 +84,7 @@
           <td>{{ room.data.room_name }}</td>
           <td>{{room.data.players.length}}/2 players</td>
           <td>
-            <button v-if="room.data.players.length == 1" @click="joinRoom(room)">join</button>
+            <button class="button5" v-if="room.data.players.length == 1" @click="joinRoom(room)">join <i class="far fa-hand-point-right"></i></button>
             <p v-if="room.data.players.length == 2">Playing</p>
           </td>
         </tr>
@@ -111,6 +112,9 @@ export default {
   methods: {
     clearlocalstorage(){
       localStorage.clear()
+      this.$router.push({ path: "/"});
+      this.$router.push({ path: "/startgame/" + docRef.id });
+
     },
 
     createRoom() {
@@ -220,7 +224,9 @@ th {
   color: wheat;
   font-family: "Macondo Swash Caps", cursive;
 }
-
+p{
+  font-family: "Macondo Swash Caps", cursive;
+}
 body {
   font-weight: 300;
   line-height: 1.42em;
@@ -255,6 +261,9 @@ h2 a {
 }
 #numberRoom {
   font-family: "Macondo Swash Caps", cursive;
+}
+.btn{
+    font-family: "Macondo Swash Caps", cursive;
 }
 .blue {
   color: #185875;
@@ -319,6 +328,31 @@ h2 a {
   box-shadow: 0 6px 6px -6px #0e1119;
 }
 
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.button5 {
+  width:33.3%;
+  background-color: white;
+  color: black;
+  border: 2px solid #555555;
+}
+
+.button5:hover {
+  background-color: #555555;
+  color: white;
+}
 .container td:hover {
   background-color: #fff842;
   color: #403e10;
