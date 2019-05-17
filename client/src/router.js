@@ -15,7 +15,7 @@ export default new Router({
     //   component: Home
     // },
     {
-      path: '/ingame',
+      path: '/ingame/:id',
       name: 'ingame',
       component: InGame
     },
