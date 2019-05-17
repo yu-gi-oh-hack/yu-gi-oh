@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import InGame from './views/InGame.vue'
 
 Vue.use(Router)
 
@@ -14,11 +12,6 @@ export default new Router({
     //   name: 'home',
     //   component: Home
     // },
-    {
-      path: '/ingame',
-      name: 'ingame',
-      component: InGame
-    },
     {
       path: '/about',
       name: 'about',
