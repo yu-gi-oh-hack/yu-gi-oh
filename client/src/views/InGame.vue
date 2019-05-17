@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="ingame-bg">
         <div class="player-status">
             <div class="name">
                 Lutfi
@@ -26,6 +26,7 @@
         </div>
 
         <!-- field -->
+        <div class="battlefield"></div>
         <div class="card-container">
             <div class="card-field"></div>
             <div class="card-field"></div>
@@ -33,22 +34,28 @@
         </div>
         <div class="card-container">
             <div 
-                @click="battle(rooms[0].players[0].cardsInField[0].atk)"
+                @click="battle(0, rooms[0].players[0].cardsInField[0].atk)"
                 class="card-field cursor-pointer"
             >
                 <img v-if="this.rooms[0].players[0].cardsInField[0]" :src="this.rooms[0].players[0].cardsInField[0].image_url_small" alt="">
             </div>
             <div 
-                @click="battle(rooms[0].players[0].cardsInField[1].atk)"
+                @click="battle(1, rooms[0].players[0].cardsInField[1].atk)"
                 class="card-field cursor-pointer"
             >
                 <img v-if="rooms[0].players[0].cardsInField[1]" :src="this.rooms[0].players[0].cardsInField[1].image_url_small" alt="">
             </div>
             <div 
-                @click="battle(rooms[0].players[0].cardsInField[2].atk)"
+                @click="battle(2, rooms[0].players[0].cardsInField[2].atk)"
                 class="card-field cursor-pointer"
             >
                 <img v-if="this.rooms[0].players[0].cardsInField[2]" :src="this.rooms[0].players[0].cardsInField[2].image_url_small" alt="">
+            </div>
+        </div>
+
+        <div class="battle-phase">
+            <div v-if="rooms[0].players[0].choosenAttack>0">
+                Attack with: {{rooms[0].players[0].choosenAttack}}
             </div>
         </div>
         <!-- field -->
@@ -334,7 +341,9 @@ export default {
                             cardsInField: [],
                             mainPhase: false,
                             battlePhase: false,
-                            endPhase: false
+                            endPhase: false,
+                            choosenAttack: 0,
+                            opponentChoosenAttack: 0
                         },
                         {
                             name:'',
@@ -517,9 +526,23 @@ export default {
                             cardsInField: [],
                             mainPhase: false,
                             battlePhase: false,
-                            endPhase: false
+                            endPhase: false,
+                            choosenAttack: 0,
+                            opponentChoosenAttack: 0
                         }
                     ],
+                    localState:{
+                        name:'',
+                        deck:[],
+                        lifepoint: 2000,
+                        cardsInHand: [],
+                        cardsInField: [],
+                        mainPhase: false,
+                        battlePhase: false,
+                        endPhase: false,
+                        choosenAttack: 0,
+                        opponentChoosenAttack: 0
+                    }
                 }
             ],
         }
@@ -601,16 +624,48 @@ export default {
             this.rooms[0].players[0].endPhase = !this.rooms[0].players[0].endPhase
             this.rooms[0].players[1].endPhase = !this.rooms[0].players[1].endPhase
         },
-        battle(attackPoint) {
-            console.log(attackPoint);
+        battle(index, attackPoint) {
+            if(this.rooms[0].players[0].battlePhase) {
+                let damage = 0
+    
+                this.rooms[0].players[0].choosenAttack = attackPoint
+                if(this.rooms[0].players[0].opponentChoosenAttack > 0 && this.rooms[0].players[0].opponentChoosenAttack > 0) {
+                    if(this.rooms[0].players[0].opponentChoosenAttack > this.rooms[0].players[0].opponentChoosenAttack) {
+                        damage=this.rooms[0].players[0].opponentChoosenAttack - this.rooms[0].players[0].choosenAttack
+    
+                        this.rooms[0].players[0].lifepoint-=damage
+                        this.rooms[0].players[0].cardsInField.splice(index, 1)
+                    }else if(this.rooms[0].players[0].opponentChoosenAttack < this.rooms[0].players[0].opponentChoosenAttack){
+                        damage=this.rooms[0].players[0].choosenAttack - this.rooms[0].players[0].opponentChoosenAttack
+    
+                        this.rooms[0].players[1].lifepoint-=damage
+                        this.rooms[0].players[1].cardsInField.splice(index, 1)
+                    }else {
+                        this.rooms[0].players[0].cardsInField.splice(index, 1)
+                        this.rooms[0].players[1].cardsInField.splice(index, 1)
+                    }
+                }
+
+                this.rooms[0].players[0].battlePhase=false
+                this.rooms[0].players[0].endPhase=true
+                this.rooms[0].players[1].mainPhase=true
+                this.rooms[0].players[1].endPhase=false
+            }
+        },
+        init() {
+            this.rooms[0].players[0].mainPhase = true
+            this.rooms[0].players[1].mainPhase = false
+            // this.fetchCards()
+            this.shuffle(this.rooms[0].players[0].deck)
+            this.shuffle(this.rooms[0].players[1].deck)
+            this.draw()
+            // while(this.rooms[0].players[0].lifepoint > 0 && this.rooms[0].players[1].lifepoint > 1) {
+            // }
+
         }
     },
     mounted() {
-        this.rooms[0].players[0].mainPhase = true
-        // this.fetchCards()
-        this.shuffle(this.rooms[0].players[0].deck)
-        this.shuffle(this.rooms[0].players[1].deck)
-        this.draw()
+        this.init()
     },
     created() {
     },
@@ -625,15 +680,21 @@ export default {
 .card-container {
     display: flex;
     justify-content: space-evenly;
+    width: 830px;
+    margin: 0 auto;
 }
 .card {
     margin: 12px auto 0px;
 }
 .card-field {
-    border: solid 1px skyblue;
+    position: relative;
+
+    border: solid 2px #6c9ab7;
     border-radius: 5px;
     width: 170px;
     height: 240px;
+
+    margin: 5px 0px;
 }
 .cursor-pointer {
     cursor: pointer;
@@ -642,6 +703,7 @@ export default {
     position: fixed;
     text-align: left;
     bottom: 35px;
+    background: #fff;
 }
 .player-status > .name {
     font-size: 37px;
@@ -666,6 +728,7 @@ export default {
     text-align: left;
     top: 35px;
     right: 1px;
+    background: #fff;
 }
 .opponent-status > .name {
     font-size: 37px;
@@ -697,5 +760,30 @@ export default {
 }
 .relative:hover .card__tooltip {
     display: block;
+}
+.battle-phase {
+    background-color: red;
+    position: fixed;
+    width: 119px;
+    top: 35px;
+    left: 26px;
+    color: #fff;
+    font-size: 21px;
+}
+.ingame-bg {
+    background-image: url('https://storage.googleapis.com/miniwp_image-storage/source.gif');
+
+    background-size: contain;;
+}
+.battlefield {
+    min-width: 930px;
+    background-color: #2c5459;
+    min-height: 100vh;
+    position: absolute;
+    top: 5px;
+    left: 201px;
+    border: solid 1px #bdbdbd;
+    border-radius: 8px;
+    opacity: 0.5;
 }
 </style>
