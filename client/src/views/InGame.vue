@@ -70,7 +70,6 @@
             </div>
         </div>
         <!-- player -->
-
         <div class="battle-phase" v-if="rooms.playerState.choosenAttack>0">
             <p>Battle:</p>
             <div>
