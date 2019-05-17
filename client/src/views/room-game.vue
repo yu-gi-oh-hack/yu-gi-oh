@@ -181,6 +181,7 @@ import { mapActions } from "vuex";
 </script>
 
 <style>
+
 @charset "UTF-8";
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300, 400, 700);
 
