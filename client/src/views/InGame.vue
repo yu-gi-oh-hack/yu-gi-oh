@@ -344,6 +344,7 @@ export default {
                             isTurn: false,
                             mainPhase: false,
                             battlePhase: false,
+                            endPhase: false,
                             choosenAttack: 0,
                             opponentChoosenAttack: 0
                         },
@@ -529,6 +530,7 @@ export default {
                             isTurn: false,
                             mainPhase: false,
                             battlePhase: false,
+                            endPhase: false,
                             choosenAttack: 0,
                             opponentChoosenAttack: 0
                         }
@@ -557,7 +559,7 @@ export default {
                         choosenAttack: 0,
                         opponentChoosenAttack: 0
                     }
-            },
+            }
         }
     },
     methods: {
@@ -671,6 +673,41 @@ export default {
             this.fetchCards()
             this.shuffle(this.rooms.playerState.deck)
             this.shuffle(this.rooms.opponentState.deck)
+        },
+        battle(index, attackPoint, opponentAttackPoint) {
+            if(this.rooms.playerState.battlePhase) {
+                let damage = 0
+    
+                this.rooms.playerState.choosenAttack = attackPoint
+
+                if(this.rooms.playerState.choosenAttack > 0 && this.rooms[0].playerState.opponentChoosenAttack > 0) {
+                    if(this.rooms.playerState.choosenAttack > this.rooms.playerState.opponentChoosenAttack) {
+                        damage=this.rooms.playerState.choosenAttack - this.rooms.playerState.opponentChoosenAttack
+    
+                        this.rooms.opponentState.lifepoint-=damage
+                        this.rooms.opponentState.cardsInField.splice(index, 1)
+                    }else if(this.rooms.playerState.choosenAttack < this.rooms.playerState.opponentChoosenAttack){
+                        damage=this.rooms.playerState.opponentChoosenAttack - this.rooms.playerState.choosenAttack
+    
+                        this.rooms.playerState.lifepoint-=damage
+                        this.rooms.playerState.cardsInField.splice(index, 1)
+                    }else {
+                        this.rooms.playerState.cardsInField.splice(index, 1)
+                        this.rooms.opponentState.cardsInField.splice(index, 1)
+                    }
+                }
+
+                this.rooms.playerState.battlePhase=false
+                this.rooms.playerState.isTurn=false
+                this.rooms.opponentState.isTurn=true
+            }
+        },
+        init() {
+            this.rooms.playerState.mainPhase = true
+            this.rooms.opponentState.mainPhase = false
+            this.fetchCards()
+            this.shuffle(this.rooms.playerState.deck)
+            this.shuffle(this.rooms.opponentState.deck)
             this.draw()
             // while(this.rooms[0].players[0].lifepoint > 0 && this.rooms[0].players[1].lifepoint > 1) {
             // }
@@ -719,7 +756,6 @@ export default {
     text-align: left;
     bottom: 35px;
     background: #fff;
-
     left: 19px;
     padding: 2px 12px;
     opacity: 0.8;
@@ -796,7 +832,6 @@ export default {
 }
 .ingame-bg {
     background-image: url('https://storage.googleapis.com/miniwp_image-storage/source.gif');
-
     background-size: contain;
     min-height: 626px;
 }
