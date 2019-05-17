@@ -2,14 +2,24 @@
   <div class="bg-create">
     <audio autoplay loop>
       <source
-        src="https://00e9e64bac661bf69f4ecbb6edecc504a7b7352095dde781a7-apidata.googleusercontent.com/download/storage/v1/b/image-storage.sukmaranggapradeta.com/o/Yugioh!%20The%20Duelists%20of%20the%20Roses%20Soundtrack%20-%20Vs%20Lancastrians%20(Extended).mp3?qk=AD5uMEv_ssoeef-yXzO0_R6AF567K6cpWUplPuay-kVf7_dTdEEJZoNpzh1Y01jyMwv0KFWYf_ZoBFGCCO2sK9RjFAA_UzQ6ibX77PwMxDJLURjXjpP85fd02ubjIsF7xoBVhZnEs1nqEHGsiw856BF7C-4b-beoW5gsv0H-D0MI4Q-uhatGAVK7SqmvJqpA0M-kqiUASKBZGtZCqPMLOB4XAB-a_nSFEONxFZxmNTsnxPRd2YeXugREbzt6ekDgLoZK_RCQfwSf8_Bz8Nm2XOAfSFO0S6OJJBEr8fE7Vud0g1QZ-vrt4ece_PhBh0qW8nX16il6Od77-KYf9QtkyTAoFPijWwrx-HgKKwzuGi-_UNBjEIO-1N9gTG4494YlAbLrxkXk7REbMdVaUnioImue2VehiMlzJKAkFcaiOKyh45dVEM6cpj0-V40cDenqEhOqgrZU_YPqYLeg4UmAWVj7-RUX9FMQgwGqOsdWf52I8SlgEtybGRPpOZmrEd602Hwxt2PBC-sUVWHE4FHEsRHGb_VElhTK-LPK7Aa3-YhkB6Lss_atm8yE990frXmgvKBozjOMcMtNM9iMNQ8R6jBqrQW04y3HYVZcLAEY5OrOaUMWwNORuXMV0m2CwVZ-wYeFLESkBUfpBKvwDxB47SzCc4FDJn97UbxoOXg9ozu-4oIyYkdm8e-dGZewBPa8D_UR6M7CNLS1YBIfcjVYHE9-lo5Vq6N8in7m-zOlTjVSy09y13Nm2XVJ8G0X7Hm003LCRHTjxC1M8pWHHLujYwkwmZbh9OyAzMoVcFA6-vAdQsH0AZcVlf1HHTHudi_MIrbTLWtLPYd7zz9YaNCvcwvC9LpRDNJty1PVWQYdtVOlgz8usgy6kMb9dKLHADCI3CEKeO5RdtciADJKiuUIfj9ZcNzHHN54cQ"
+        src="https://drive.google.com/file/d/1_ApZ-Oc0J54f8AOUPE-harLbQuEPvE6O/view"
       >
     </audio>
 
-    <form class="create-form" @submit.prevent="createUser">
-      <label for="nameRoom">User</label>
-      <input type="text" name="username" id="username" v-model="username" required>
-      <button type="submit">submit</button>
+    <form class="create-form" @sumbit.prevent="createUser" >
+        <div class="col">
+      <label for="nameRoom" class="float-left">NickName: </label><br>    
+      <input type="text" name="username" id="username" placeholder="Type here..." v-model="username" required>
+      <!-- <button type="submit">submit</button> -->
+      <br>
+      <div>
+        <a @click.prevent="createUser" class="effect1">
+          Let's Go!
+          <span class="bg"></span>
+        </a>
+      </div>
+
+        </div>
     </form>
   </div>
 </template>
@@ -36,7 +46,7 @@ export default {
 
 <style>
 .bg-create {
-  background: url('https://wallpapercave.com/wp/wp2740578.jpg');
+  background: url("http://getwallpapers.com/wallpaper/full/9/b/f/755260-yugioh-gx-wallpaper-1920x1080-pc.jpg");
   min-height: 100vh;
   background-position: center;
   background-size: cover;
@@ -45,5 +55,94 @@ export default {
   position: absolute;
   top: 19em;
   right: 33em;
+}
+.effect1 {
+  color: #222;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-size: 24px;
+  position: relative;
+  padding: 10px 50px 10px 20px;
+
+  -webkit-transition: all 0.3s;
+
+  -o-transition: all 0.3s;
+
+  transition: all 0.3s;
+
+  -webkit-transform: scale(3);
+
+  -ms-transform: scale(3);
+
+  transform: scale(3); /*change scale(3) to scale(1)*/
+}
+
+.effect1 .bg {
+  background: #222;
+  width: 30px;
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -1px;
+  z-index: -1;
+
+  -webkit-transition: all 0.3s;
+
+  -o-transition: all 0.3s;
+
+  transition: all 0.3s;
+}
+
+.effect1:hover {
+  padding-right: 20px;
+  color: #fff;
+}
+
+.effect1:hover .bg {
+  height: 100%;
+  width: 100%;
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+
+.effect1 .bg:before,
+.effect1 .bg:after {
+  content: "";
+  height: 2px;
+  width: 10px;
+  background: #222;
+  position: absolute;
+  right: -2px;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.effect1 .bg:before {
+  bottom: 3px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.effect1 .bg:after {
+  top: 3px;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.effect1:hover .bg:before,
+.effect1:hover .bg:after {
+  right: 0;
+}
+
+.effect1:hover .bg:before {
+  bottom: 6px;
+}
+
+.effect1:hover .bg:after {
+  top: 6px;
 }
 </style>
