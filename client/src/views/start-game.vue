@@ -1,30 +1,78 @@
 <template>
-  <div id="allthethings">
-    <!-- <div id="left"></div> -->
-    <router-link to="/roomgame">
-      <div id="single">START GAME</div>
-    </router-link>
-    <!-- <div id="multiplayer"><p>MULTIPLAYER</p></div>
-  <div id="options"><p>OPTIONS</p></div>
-    <div id="credits"><p>CREDITS</p></div>-->
-    <!-- <div id="right"></div> -->
+  <div>
 
-    <!-- <div id="exit"></div> -->
-    <!-- <div id="circle"></div> -->
+    <div class="container my-4" v-if="!disable">
+      <img
+        src="https://media.giphy.com/media/vZRdMe89bFkTm/giphy.gif"
+        alt="waiting"
+        
+      ><br>
+<p>Waiting...another player</p>
+    </div>
+    <div id="allthethings" v-if="disable">
+      <img src="https://images5.alphacoders.com/321/thumb-1920-321887.jpg" id="bg" alt="">
+      <router-link to="/roomgame" >
+        <div id="single">START GAME</div>
+      </router-link>
+    </div>
+    
   </div>
 </template>
 
 <script>
-export default {};
+import db from "@/api/firebase";
+export default {
+  data() {
+    return {
+      disable: false,
+      room: {}
+    };
+  },
+  mounted() {
+    db.collection("rooms")
+      .doc(this.$route.params.id)
+      .onSnapshot(doc => {
+        this.room = doc.data();
+      });
+  },
+  watch: {
+    room() {
+      if (this.room.players.length !== 2) {
+        this.disable = false;
+      } else {
+        this.disable = true;
+      }
+    }
+  }
+};
 </script>
 
 <style>
+
 @import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light);
 
-body {
-  background-image: url();
+/* html { 
+  background: url() no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+} */
+#bg {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+	
+  /* Preserve aspet ratio */
+  min-width: 100%;
+  min-height: 100%;
 }
-
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 #exit {
   height: 30px;
   width: 30px;
@@ -103,7 +151,7 @@ body {
   width: 600px;
   background: #006680;
   text-align: center;
-  font-size: 30px;
+  font-size: 50px;
   background-size: 1px 300%;
   -webkit-transition: 0.5s;
   transition: 0.5s;
