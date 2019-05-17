@@ -25,36 +25,61 @@
 
         <!-- field -->
         <div class="battlefield"></div>
-        <div class="card-container">
-            <div class="card-field"></div>
-            <div class="card-field"></div>
-            <div class="card-field"></div>
-        </div>
+        <!-- opponent -->
         <div class="card-container">
             <div 
-                @click="battle(0, rooms.playerState.cardsInField[0].atk)"
+                @click="battleOpponentCard(0, rooms.opponentState.cardsInField[0].atk)"
+                class="card-field cursor-pointer"
+            >
+                <img v-if="this.rooms.opponentState.cardsInField[0]" :src="this.rooms.opponentState.cardsInField[0].image_url_small" alt="">
+            </div>
+            <div 
+                @click="battleOpponentCard(1, rooms.opponentState.cardsInField[1].atk)"
+                class="card-field cursor-pointer"
+            >
+                <img v-if="rooms.opponentState.cardsInField[1]" :src="this.rooms.opponentState.cardsInField[1].image_url_small" alt="">
+            </div>
+            <div 
+                @click="battleOpponentCard(2, rooms.opponentState.cardsInField[2].atk)"
+                class="card-field cursor-pointer"
+            >
+                <img v-if="this.rooms.opponentState.cardsInField[2]" :src="this.rooms.opponentState.cardsInField[2].image_url_small" alt="">
+            </div>
+        </div>
+        <!-- opponent -->
+
+        <!-- player --> 
+        <div class="card-container">
+            <div 
+                @click="battleMyCard(0, rooms.playerState.cardsInField[0].atk)"
                 class="card-field cursor-pointer"
             >
                 <img v-if="this.rooms.playerState.cardsInField[0]" :src="this.rooms.playerState.cardsInField[0].image_url_small" alt="">
             </div>
             <div 
-                @click="battle(1, rooms.playerState.cardsInField[1].atk)"
+                @click="battleMyCard(1, rooms.playerState.cardsInField[1].atk)"
                 class="card-field cursor-pointer"
             >
                 <img v-if="rooms.playerState.cardsInField[1]" :src="this.rooms.playerState.cardsInField[1].image_url_small" alt="">
             </div>
             <div 
-                @click="battle(2, rooms.playerState.cardsInField[2].atk)"
+                @click="battleMyCard(2, rooms.playerState.cardsInField[2].atk)"
                 class="card-field cursor-pointer"
             >
                 <img v-if="this.rooms.playerState.cardsInField[2]" :src="this.rooms.playerState.cardsInField[2].image_url_small" alt="">
             </div>
         </div>
-
-        <div class="battle-phase">
-            <div v-if="rooms.playerState.choosenAttack>0">
-                Attack with: {{rooms.playerState.choosenAttack}}
+        <!-- player -->
+        <div class="battle-phase" v-if="rooms.playerState.choosenAttack>0">
+            <p>Battle:</p>
+            <div>
+                Attack with: {{rooms.playerState.choosenAttack}} vs : {{rooms.opponentState.choosenAttack}}
             </div>
+            <button 
+                @click="battle"
+                class="btn btn-danger">
+                confirm
+            </button>
         </div>
         <!-- field -->
 
@@ -545,7 +570,9 @@ export default {
                         mainPhase: false,
                         battlePhase: false,
                         choosenAttack: 0,
-                        opponentChoosenAttack: 0
+                        opponentChoosenAttack: 0,
+                        choosenIndex: 0,
+                        opponentChoosenIndex: 0
                     },
                     opponentState: {
                         name:'',
@@ -557,7 +584,9 @@ export default {
                         mainPhase: false,
                         battlePhase: false,
                         choosenAttack: 0,
-                        opponentChoosenAttack: 0
+                        opponentChoosenAttack: 0,
+                        choosenIndex: 0,
+                        opponentChoosenIndex: 0
                     }
             }
         }
@@ -639,7 +668,15 @@ export default {
             this.rooms.playerState.isTurn = false
             this.rooms.opponentState.isTurn = true
         },
-        battle(index, attackPoint, opponentAttackPoint) {
+        battleMyCard(index, atk) {
+            this.rooms.playerState.choosenAttack = atk
+            this.rooms.playerState.choosenIndex = index
+        },
+        battleOpponentCard(index, atk) {
+            this.rooms.opponentState.choosenAttack = atk
+            this.rooms.opponentState.choosenIndex = index
+        },
+        battle() {
             if(this.rooms.playerState.battlePhase) {
                 let damage = 0
     
@@ -650,21 +687,26 @@ export default {
                         damage=this.rooms.playerState.choosenAttack - this.rooms.playerState.opponentChoosenAttack
     
                         this.rooms.opponentState.lifepoint-=damage
-                        this.rooms.opponentState.cardsInField.splice(index, 1)
+                        this.rooms.opponentState.cardsInField.splice(this.rooms.opponentState.choosenIndex, 1)
                     }else if(this.rooms.playerState.choosenAttack < this.rooms.playerState.opponentChoosenAttack){
                         damage=this.rooms.playerState.opponentChoosenAttack - this.rooms.playerState.choosenAttack
     
                         this.rooms.playerState.lifepoint-=damage
-                        this.rooms.playerState.cardsInField.splice(index, 1)
+                        this.rooms.playerState.cardsInField.splice(this.rooms.playerState.choosenIndex, 1)
                     }else {
-                        this.rooms.playerState.cardsInField.splice(index, 1)
-                        this.rooms.opponentState.cardsInField.splice(index, 1)
+                        this.rooms.playerState.cardsInField.splice(this.rooms.playerState.choosenIndex, 1)
+                        this.rooms.opponentState.cardsInField.splice(this.rooms.opponentState.choosenIndex, 1)
                     }
                 }
 
                 this.rooms.playerState.battlePhase=false
                 this.rooms.playerState.isTurn=false
                 this.rooms.opponentState.isTurn=true
+
+                this.rooms.playerState.choosenAttack = 0
+                this.rooms.playerState.choosenIndex = 0
+                this.rooms.opponentState.choosenAttack = 0
+                this.rooms.opponentState.choosenIndex = 0
             }
         },
         init() {
@@ -808,7 +850,6 @@ export default {
     font-weight: 500;
     right: -69px;
     top: -90px;
-    
     display: none;
 }
 .card__tooltip .name {
@@ -822,16 +863,20 @@ export default {
     display: block;
 }
 .battle-phase {
-    background-color: red;
+    font-family: 'Prosto One', cursive;
+    background-color: #6c8ddd;
     position: fixed;
-    width: 119px;
+    width: 207px;
     top: 35px;
     left: 26px;
     color: #fff;
     font-size: 21px;
+    padding: 16px;
+    border-radius: 5px;
+    opacity: 0.9;
 }
 .ingame-bg {
-    background-image: url('https://storage.googleapis.com/miniwp_image-storage/source.gif');
+    background-image: url('https://cdn-www.bluestacks.com/bs-images/yu-gi-oh_banner.jpg');
     background-size: contain;
     min-height: 626px;
 }

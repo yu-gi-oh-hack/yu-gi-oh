@@ -9,7 +9,9 @@
         <label for="nameRoom">Room</label>
         <input type="text" name="nameRoom" id="nameRoom" v-model="name_room">
         <button type="submit">create new room!</button>
-      </form>-->
+      </form> -->
+      <div class="d-flex justify-content-between">
+
       <button
         type="button"
         class="btn btn-primary mt-5"
@@ -17,6 +19,16 @@
         data-target="#exampleModal"
         data-whatever="@getbootstrap"
       >create new room!</button>
+      <router-link to="/">
+      <button
+        @click="clearlocalstorage"
+        type="button"
+        class="btn btn-primary mt-5"
+        data-toggle="modal"
+        data-whatever="@getbootstrap"
+      >Back</button>
+      </router-link>
+      </div>
       <div
         class="modal fade"
         id="exampleModal"
@@ -97,6 +109,10 @@ export default {
     };
   },
   methods: {
+    clearlocalstorage(){
+      localStorage.clear()
+    },
+
     createRoom() {
       // this.list_rooms = []
       db.collection("rooms")
