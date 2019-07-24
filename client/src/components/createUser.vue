@@ -1,33 +1,148 @@
 <template>
-    <div>
-        <form @submit.prevent="createUser">
-        <label for="nameRoom">User</label>
-            <input type="text" name="username" id="username" v-model="username" required>
-            <button type="submit" >submit</button>
-        </form>
-    </div>
+  <div class="bg-create">
+    <audio autoplay loop>
+      <source
+        src="https://drive.google.com/file/d/1_ApZ-Oc0J54f8AOUPE-harLbQuEPvE6O/view"
+      >
+    </audio>
+
+    <form class="create-form" @sumbit.prevent="createUser" >
+        <div class="col">
+      <label for="nameRoom" class="float-left">NickName: </label><br>    
+      <input type="text" name="username" id="username" placeholder="Type here..." v-model="username" required>
+      <!-- <button type="submit">submit</button> -->
+      <br>
+      <div>
+        <a @click.prevent="createUser" class="effect1">
+          Let's Go!
+          <span class="bg"></span>
+        </a>
+      </div>
+
+        </div>
+    </form>
+  </div>
 </template>
 
 <script>
-    import db from "@/api/firebase"
+import db from "@/api/firebase";
 
-    export default {
-        name: 'createuser',
-        data() {
-            return {
-                username: '',
-            }
-        },
-        methods: {
-            createUser() {
-                localStorage.setItem('username', this.username)
-                console.log(localStorage.username)
-                this.$emit('newplayermasuk',this.username)
-            }
-        }
+export default {
+  name: "createuser",
+  data() {
+    return {
+      username: ""
+    };
+  },
+  methods: {
+    createUser() {
+      localStorage.setItem("username", this.username);
+      console.log(localStorage.username);
+      this.$emit("newplayermasuk", this.username);
     }
+  }
+};
 </script>
 
 <style>
+.bg-create {
+  background: url("http://getwallpapers.com/wallpaper/full/9/b/f/755260-yugioh-gx-wallpaper-1920x1080-pc.jpg");
+  min-height: 100vh;
+  background-position: center;
+  background-size: cover;
+}
+.create-form {
+  position: absolute;
+  top: 19em;
+  right: 33em;
+}
+.effect1 {
+  color: #222;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-size: 24px;
+  position: relative;
+  padding: 10px 50px 10px 20px;
 
+  -webkit-transition: all 0.3s;
+
+  -o-transition: all 0.3s;
+
+  transition: all 0.3s;
+
+  -webkit-transform: scale(3);
+
+  -ms-transform: scale(3);
+
+  transform: scale(3); /*change scale(3) to scale(1)*/
+}
+
+.effect1 .bg {
+  background: #222;
+  width: 30px;
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -1px;
+  z-index: -1;
+
+  -webkit-transition: all 0.3s;
+
+  -o-transition: all 0.3s;
+
+  transition: all 0.3s;
+}
+
+.effect1:hover {
+  padding-right: 20px;
+  color: #fff;
+}
+
+.effect1:hover .bg {
+  height: 100%;
+  width: 100%;
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+
+.effect1 .bg:before,
+.effect1 .bg:after {
+  content: "";
+  height: 2px;
+  width: 10px;
+  background: #222;
+  position: absolute;
+  right: -2px;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.effect1 .bg:before {
+  bottom: 3px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.effect1 .bg:after {
+  top: 3px;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.effect1:hover .bg:before,
+.effect1:hover .bg:after {
+  right: 0;
+}
+
+.effect1:hover .bg:before {
+  bottom: 6px;
+}
+
+.effect1:hover .bg:after {
+  top: 6px;
+}
 </style>
